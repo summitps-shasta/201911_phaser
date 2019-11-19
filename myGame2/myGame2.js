@@ -7,8 +7,8 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assers/player.png');
         game.load.image('object', 'assets/object.png');
+        game.load.spritesheet('player', 'assets/Horn Buddy.png', 128, 128);
     },
 
     create: function() {
@@ -32,6 +32,10 @@ game_state.main.prototype = {
         //Create the left/right arrow keys
         this.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+        
+        //Our two animations, walking left and right
+        this.player.animations.add('left', [0, 1, 2, 3, 4, 5, 6], 10, true);
+        this.player.animations.add('right', [7, 8, 9, 10, 11, 12], 10, true);
 
         //Create objects group
         this.objects = game.add.group();
@@ -55,13 +59,19 @@ game_state.main.prototype = {
         // Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
+            
+            this.player.animations.play('left');
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
+            
+            this.player.animations.play('right')
         }
         //Stop the player when no key is pressed 
         else {
             this.player.body.velocity.x = 0;
+            
+            this.player.frame = 0;
         }
 
         // Collision between player and the object
