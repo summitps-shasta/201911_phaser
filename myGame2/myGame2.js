@@ -13,7 +13,8 @@ game_state.main.prototype = {
 
     create: function() {
         //Set the background color to blue
-        game.stage.backgroundColor = '#3598db';
+         game.stage.backgroundColor = '#9182ff';
+        
         //Start the Arcade physics system (for movements and collisions)
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -51,10 +52,11 @@ game_state.main.prototype = {
             //create an object at the top of the screen at a random x
             var object = _this.objects.create(Math.random() * 800, -64, 'object');
 
-            // Let gravity do its thing
+            //Let gravity do its thing
             object.body.gravity.y = 300;
         }, 1000); //1000 = 1000ms = 1 second
     },
+    
     update: function() {
         // Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
@@ -65,7 +67,7 @@ game_state.main.prototype = {
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
             
-            this.player.animations.play('right')
+            this.player.animations.play('right');
         }
         //Stop the player when no key is pressed 
         else {
@@ -82,5 +84,6 @@ game_state.main.prototype = {
         object.kill();
     }
 };
+
 game.state.add('main', game_state.main);
 game.state.start('main');
