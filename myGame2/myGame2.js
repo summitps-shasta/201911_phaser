@@ -7,7 +7,7 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/skele.png', 128, 128);
         game.load.image('object', 'assets/object.png');
     },
 
