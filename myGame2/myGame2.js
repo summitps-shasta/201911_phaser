@@ -1,13 +1,13 @@
 /*global Phaser*/
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
-var game_state = {}
+var game_state = {};
 
 game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/gg.png', 128, 128);
         game.load.image('object', 'assets/object.png');
     },
 
@@ -50,20 +50,46 @@ game_state.main.prototype = {
 
             //Let gravity do its thing
             object.body.gravity.y = 300;
-        }, 1000) // 1000 = 1000ms = 1 second
+        }, 1000) // 1000 = 1000ms = 1 second};
+        
+        //Our two aninmations, walking left and right
+        this.player.animations.add('left',[4,5], 10, true);
+        this.player.animations.add('right',[2,3], 10, true);
+        
+        if(this.cursors.left.isDown) {
+            //Move to the left
+            this.player.body.velocity.x = -150;
+            
+            this.player.animations.play('left');
+            
+        }
+            
+            if(this.cursors.right.isDown){
+                //Move to the right
+                this.player.body.velocity.x = -150;
+                
+                this.player.animations.play('right');
+            
+        }
+         this.player.animations.stop();
+         
+         this.player.frame = 4;
     },
 
     update: function() {
         //Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
+            this.player.frame = 4,5;
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
+            this.player.frame = 2,3;
         }
         //Stop the player when no key is pressed
         else {
             this.player.body.velocity.x = 0;
+            this.player.frame = 0;
         }
         //Collision between the player and the object
         game.physics.arcade.overlap(this.player,this.objects,this.hitObject,null,this);
@@ -74,7 +100,7 @@ game_state.main.prototype = {
     }
 
   
-    }
+    };
 
 game.state.add('main', game_state.main);
 game.state.start('main');
