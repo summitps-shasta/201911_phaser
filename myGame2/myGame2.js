@@ -7,7 +7,8 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+//      game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/bruh man.png', 150, 150);
         game.load.image('object', 'assets/object.png');
     },
 
@@ -21,6 +22,9 @@ game_state.main.prototype = {
         game.physics.arcade.enable(this.player);
         //enableBodyOnPlayer
         this.player.enableBody = true;
+        
+        this.player.animations.add('move', [0, 1, 2, 3], 10, true);
+        
         // MakeSureThePlayerWon'tMoveWhenItHitsTheBall
         this.player.body.immovable = true;
         // CreateTheLeft/rightArrowKeys
@@ -44,12 +48,16 @@ game_state.main.prototype = {
     update: function() {
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
+            this.player.animations.play('move');
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
+            this.player.animations.play('move');
         }
         else {
             this.player.body.velocity.x = 0;
+            this.player.animations.stop();
+            this.player.frame = 0;
         }
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
     },
