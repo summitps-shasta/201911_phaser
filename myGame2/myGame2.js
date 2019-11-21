@@ -23,7 +23,9 @@ game_state.main.prototype = {
         //Enable body on player
         this.player.enableBody = true;
         
-        this.player.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 10, true);
+        this.player.animations.add('right', [0, 1, 2, 3, 4, 5, 6], 10, true);
+                this.player.animations.add('left', [8, 9, 10, 11, 12, 13, 14], 10, true);
+
         this.player.scale.setTo(2, 2);
         //Make sure the player won't move when it hits the ball 
         this.player.body.immovable = true;
@@ -52,17 +54,17 @@ game_state.main.prototype = {
         //Move the player left/rigth when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
-            this.player.animations.play('move');
+            this.player.animations.play('left');
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
-            this.player.animations.play('move');
+            this.player.animations.play('right');
         }
         //Stop the player when no key is pressed 
         else {
             this.player.body.velocity.x = 0;
             this.player.animations.stop();
-            this.player.frame = 0;
+            this.player.frame = 7;
         }
 
         //Collision between the player and the ibject 
