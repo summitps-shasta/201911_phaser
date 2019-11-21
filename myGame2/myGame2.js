@@ -7,7 +7,7 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/basketballs.png', 160, 160);
         game.load.image('object', 'assets/object.png');
     },
 
@@ -22,6 +22,10 @@ game_state.main.prototype = {
         game.physics.arcade.enable(this.player);
         // Enable body on player
         this.player.enableBody = true;
+        
+        this.player.animations.add('left', [0, 1, 2, 3, 4, 5], 10, true);
+        this.player.animations.add('right', [7, 8, 9, 10, 11, 12], 10, true);
+        
         // Make sure the player won't move when it hits the ball
         this.player.body.immovable = true;
         // Create the left/right arrow keys
@@ -45,13 +49,17 @@ game_state.main.prototype = {
         // Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
+            this.player.animations.play('left');
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
+            this.player.animations.play('right');
         }
         // Stop the player when no key is pressed
         else {
             this.player.body.velocity.x = 0;
+            this.player.animations.stop();
+            this.player.frame = 6;
         }
         // Collision between the player and the object
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
