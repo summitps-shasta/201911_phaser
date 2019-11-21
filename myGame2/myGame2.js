@@ -7,7 +7,7 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/moped.png',  200,200);
         game.load.image('object', 'assets/object.png');
 
     },
@@ -23,6 +23,9 @@ game_state.main.prototype = {
         game.physics.arcade.enable(this.player);
         // enable body on player 
         this.player.enableBody = true;
+        
+        this.player.animations.add('right', [0, 1, 2], 10, true);
+        
         //  Make sure the player won't move when it hits the ball 
         this.player.body.immovable = true;
         // Create the left/right arrow keys
@@ -52,10 +55,14 @@ game_state.main.prototype = {
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
+                        this.player.animations.play('right');
+
         }
         //stop the player when no key is pressed
         else {
             this.player.body.velocity.x = 0;
+            this.player.animations.stop();
+            this.player.frame=0;
         }
         // Collision between the player and the object
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
