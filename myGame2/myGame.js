@@ -8,7 +8,7 @@ game_state.main.prototype = {
 
     preload: function() {
         game.load.image('sky', 'assets/sky.png');
-        game.load.image('ground', 'assets/platform.png');
+        game.load.image('ground', 'assets/rock.png', 200, 32);
         game.load.spritesheet('star', 'assets/Magic Orb (2).png', 64, 64);
         game.load.spritesheet('dude', 'assets/Horn Buddy.png', 128, 128);
     },
@@ -35,9 +35,9 @@ game_state.main.prototype = {
         ground.body.immovable = true;
         
         //Now let's create two ledges
-        var ledge = this.platforms.create(400, 150, 'ground');
+        var ledge = this.platforms.create(400, 125, 'ground');
         ledge.body.immovable = true;
-        var ledge2 = this.platforms.create(0, 350, 'ground');
+        var ledge2 = this.platforms.create(-200, 325, 'ground');
         ledge2.body.immovable = true;
         
         //We're going to be using physics, so enable the Arcade Physics system
@@ -50,8 +50,8 @@ game_state.main.prototype = {
         game.physics.arcade.enable(this.player);
         
         //Player physics properties. Give the little guy a bounce.
-        this.player.body.bounce.y = 0;
-        this.player.body.gravity.y = 125;
+        this.player.body.bounce.y = 0.5;
+        this.player.body.gravity.y = 300;
         this.player.body.collideWorldBounds = true;
                 this.player.body.setSize(81, 128, 23, 0.1);
 
@@ -120,14 +120,11 @@ game_state.main.prototype = {
         
         //Allow the this.player to jump if they are touching the ground.
         if (this.cursors.up.isDown && this.player.body.touching.down) {
-            this.player.body.velocity.y = -250;
+            this.player.body.velocity.y = -370;
         }
         
         // Checks to see if this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
-        
-        game.debug.body(this.player);
-        
     },
     
     collectStar: function(player, star) {

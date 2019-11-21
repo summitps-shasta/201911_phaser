@@ -7,7 +7,7 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('object', 'assets/object.png');
+        game.load.image('object', 'assets/Magic Orb(one).png');
         game.load.spritesheet('player', 'assets/Horn Buddy.png', 128, 128);
     },
 
