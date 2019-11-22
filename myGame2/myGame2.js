@@ -1,19 +1,19 @@
 /*global Phaser*/
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
-var game_state = {}
+var game_state = {};
 
 game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/sonic.png', 128, 128);
         game.load.image('object', 'assets/object.png');
-        // Set the background color to blue
-        game.stage.backgroundColor = '#3598db';
     },
 
     create: function() {
+        // Set the background color to blue
+        game.stage.backgroundColor = '#3598db';
         // Start the Arcade physics system (for movements and collisions)
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // We need to enable physics on this.player
@@ -39,7 +39,7 @@ game_state.main.prototype = {
             var object = _this.objects.create(Math.random() * 800, -64, 'object');
             // Let gravity do its thing
             object.body.gravity.y = 300;
-        }, 1000) // 1000ms = 1 second;
+        }, 1000) // 1000ms = 1 second
     },
     update: function() {
         // Move the player left/right when an arrow key is pressed
@@ -52,9 +52,10 @@ game_state.main.prototype = {
         // Stop the player when no key is pressed
         else {
             this.player.body.velocity.x = 0;
-            // Collision between the player and the object
-            game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
         }
+        // Collision between the player and the object
+        game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
+    
     },
     hitObject: function(player, object) {
         object.kill();
