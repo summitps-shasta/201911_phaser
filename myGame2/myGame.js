@@ -8,7 +8,7 @@ game_state.main.prototype = {
 
     preload: function() {
         game.load.image('sky', 'assets/wall.png');
-        game.load.image('ground', 'assets/rock.png', 200, 32);
+        game.load.image('ground', 'assets/rock.png', 400, 32);
         game.load.spritesheet('star', 'assets/Magic Orb (2).png', 64, 64);
         game.load.spritesheet('dude', 'assets/Horn Buddy.png', 128, 128);
     },
@@ -51,7 +51,7 @@ game_state.main.prototype = {
         
         //Player physics properties. Give the little guy a bounce.
         this.player.body.bounce.y = 0;
-        this.player.body.gravity.y = 300;
+        this.player.body.gravity.y = 125;
         this.player.body.collideWorldBounds = true;
                 this.player.body.setSize(81, 128, 23, 0.1);
 
@@ -101,13 +101,13 @@ game_state.main.prototype = {
         
         if (this.cursors.left.isDown) {
             //Move to the left
-            this.player.body.velocity.x = -150;
+            this.player.body.velocity.x = -200;
             
             this.player.animations.play('left');
         }
         else if (this.cursors.right.isDown) {
             //Move to the right
-            this.player.body.velocity.x = 150;
+            this.player.body.velocity.x = 200;
             
             this.player.animations.play('right');
         }
@@ -120,11 +120,12 @@ game_state.main.prototype = {
         
         //Allow the this.player to jump if they are touching the ground.
         if (this.cursors.up.isDown && this.player.body.touching.down) {
-            this.player.body.velocity.y = -370;
+            this.player.body.velocity.y = -250;
         }
         
         // Checks to see if this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
+
     },
     
     collectStar: function(player, star) {
