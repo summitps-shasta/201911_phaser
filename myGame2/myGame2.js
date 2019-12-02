@@ -7,13 +7,14 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.spritesheet('player', 'assets/player.png', 160, 160);
         game.load.image('object', 'assets/object.png');
     },
 
     create: function() {
         // Set the background color to blue
-        game.stage.backgroundColor = '#3598db';
+        game.stage.backgroundColor = '#ffff00'
+        ;
         // Start the arcade physics system (for movements and collisions)
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Add the player at the bottom of the screen
@@ -40,14 +41,21 @@ game_state.main.prototype = {
             // Let gravity do its thing
             object.body.gravity.y = 300;
         }, 1000) // 1000 = 1000ms = 1 second
+
+        // Our two animations, walking left and right.
+        this.player.animations.add('left', [4, 5, 6, 7], 10, true);
+        this.player.animations.add('right', [0, 1, 2, 3,], 10, true);
     },
+
     update: function() {
         // Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
+            this.player.animations.play('left');
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
+            this.player.animations.play('right');
         }
         // Stop the player when no key is pressed
         else {
@@ -56,7 +64,20 @@ game_state.main.prototype = {
         // Collision between the player and object
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
 
+//        if (this.cursors.left.isDown) {
+//            // Move to the left
+//            this.player.body.velocity.x = -150;
+//            this.player.animations.play('left');
+//        }
+//        if (this.cursors.right.isDown) {
+//            // Move to the right
+//            this.player.body.velocity.x = 150
+//            this.player.animations.play('right')
+//        }
+
     },
+
+
     hitObject: function(player, object) {
         object.kill();
     }
