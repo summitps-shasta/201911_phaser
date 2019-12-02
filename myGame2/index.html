@@ -12,8 +12,23 @@
 </head>
 <body>
 
+<div id=html-id style="width: 800px; height: 600px; margin-right: auto; margin-left: auto; border: 1px solid black;">
+</div>
+
+<a href=https://phaser.io/>phaser.io</a>    
+
+<script>
+/*  global Phaser  - setup intial game display  */
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'html-id');
+var game_state = {}
+</script>
+<!--  load discrete game pages  -->
+<script type="text/javascript" src="intro.js"></script>
 <script type="text/javascript" src="myGame2.js"></script>
-<script type="text/javascript" src="story.js"></script>
+<script>
+/*  global game - start game!  */
+game.state.start('intro');
+</script>
 
 </body>
 </html>
