@@ -7,8 +7,8 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('sky', 'assets/wall.png');
-        game.load.image('ground', 'assets/rock.png', 400, 32);
+        game.load.image('sky', 'assets/sky.png');
+        game.load.image('ground', 'assets/platform.png');
         game.load.spritesheet('star', 'assets/Magic Orb (2).png', 64, 64);
         game.load.spritesheet('dude', 'assets/Horn Buddy.png', 128, 128);
     },
@@ -35,9 +35,9 @@ game_state.main.prototype = {
         ground.body.immovable = true;
         
         //Now let's create two ledges
-        var ledge = this.platforms.create(400, 125, 'ground');
+        var ledge = this.platforms.create(400, 150, 'ground');
         ledge.body.immovable = true;
-        var ledge2 = this.platforms.create(-200, 325, 'ground');
+        var ledge2 = this.platforms.create(0, 350, 'ground');
         ledge2.body.immovable = true;
         
         //We're going to be using physics, so enable the Arcade Physics system
@@ -83,7 +83,7 @@ game_state.main.prototype = {
             //The this.score
             this.scoreText = game.add.text(16, 16, "score: ", {
                 fontSize: '32px',
-                fill: '#fff'
+                fill: '#000'
             });
             this.score = 0;
         }
@@ -101,13 +101,13 @@ game_state.main.prototype = {
         
         if (this.cursors.left.isDown) {
             //Move to the left
-            this.player.body.velocity.x = -200;
+            this.player.body.velocity.x = -150;
             
             this.player.animations.play('left');
         }
         else if (this.cursors.right.isDown) {
             //Move to the right
-            this.player.body.velocity.x = 200;
+            this.player.body.velocity.x = 150;
             
             this.player.animations.play('right');
         }
@@ -125,7 +125,9 @@ game_state.main.prototype = {
         
         // Checks to see if this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
-
+        
+        game.debug.body(this.player);
+        
     },
     
     collectStar: function(player, star) {
@@ -139,4 +141,4 @@ game_state.main.prototype = {
 };
 
 game.state.add('main', game_state.main);
-game.state.start('main');
+//game.state.start('main');
