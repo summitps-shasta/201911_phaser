@@ -13,7 +13,7 @@ game_state.main.prototype = {
     },
 
     create: function() {
-        this.rick_score = 0;
+        this.game_score = 0;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         game.add.sprite(0, 0, 'sky');   //  SKY  create
@@ -83,23 +83,12 @@ game_state.main.prototype = {
             this.player.frame = 0;
         }
 
-        if (0) {  //  this is debug code, enable to see list of active objects
-            console.log("---");
-            this.objects.forEach(function(item) {
-                console.log("ball y: " + item.position.y);
-                if (item.position.y > 400) {
-                    this.objects.remove(item, false, false);
-                    item.destroy();
-                }
-            }, this);
-        } 
-
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
     },
 
     hitObject: function(player, object) {
-        this.rick_score++;
-        console.log("score: " + this.rick_score);
+        this.game_score++;
+        console.log("score: " + this.game_score);
         object.kill();
     },
     
