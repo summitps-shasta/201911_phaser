@@ -7,72 +7,135 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.spritesheet('player', 'assets/thing.png', 64, 64);
-        game.load.image('object', 'assets/object.png');
+        game.load.image('sky', 'assets/sky.png');
+        game.load.image('ground', 'assets/platform.png');
+        game.load.image('star', 'assets/star.png');
+        game.load.spritesheet('dude', 'assets/thing.png', 64, 64);
     },
 
     create: function() {
-        //Set the background color to blue 
-        game.stage.backgroundColor = '#3598db';
-        //Start the Arcade physics system (for movements and collisions)
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        //Add the player at the bottom of the screen 
-        this.player = game.add.sprite(200, 400, 'player');
-        //We need to enable physics on this.player 
-        game.physics.arcade.enable(this.player);
-        //Enable body on player
-        this.player.enableBody = true;
         
-        this.player.animations.add('right', [0, 1, 2, 3, 4, 5, 6], 10, true);
-                this.player.animations.add('left', [8, 9, 10, 11, 12, 13, 14], 10, true);
-
-        this.player.scale.setTo(2, 2);
-        //Make sure the player won't move when it hits the ball 
-        this.player.body.immovable = true;
-        //Create the left/right arrow keys
-        this.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        this.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-        //Create objects group
-        this.objects = game.add.group();
-        //Enable body for all objects in the group
-        this.objects.enableBody = true;
-
-        //Anchor this object to _this variable
-        var _this = this;
-        //Create object over time
-        setInterval(function() {
-            //create an object at the top of the screen at a random x
-            var object = _this.objects.create(Math.random() * 800, -64, 'object');
-
+        this.score = 0;
+        
+        // We're going to be using physics, so enable the Arcade Physics system 
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        game.add.sprite(0, 0, 'star');
+        
+        // A simple background for our game
+        game.add.sprite(0, 0, 'sky');
+      
+        // The platforms group contains the ground and the 2 ledges we can jump on
+        this.platforms = game.add.group();
+       
+        // We will enable physics for any onject that is created in this group
+        this.platforms.enableBody = true;
+      
+        // Here we create the ground.
+        var ground = this.platforms.create(0, game.world.height - 64, 'ground');
+       
+        //Scale it to fit the width of the game (the original sprite is 400x32 in size)
+        ground.scale.setTo(2, 2);
+       
+        // This stops it from falling away when you jump on it 
+        ground.body.immovable = true;
+     
+        // Now let's create two ledges 
+        var ledge = this.platforms.create(200, 200, 'ground');
+        ledge.body.immovable = true;
+        
+         // Now let's create two ledges 
+        var ledge_l = this.platforms.create(-100, 400, 'ground');
+        ledge_l.body.immovable = true;
+        
+         // Now let's create two ledges 
+        var ledge_r = this.platforms.create(500, 400, 'ground');
+        ledge_r.body.immovable = true;
+      
+        // The this.player and its settings 
+        this.player = game.add.sprite(32, game.world.height - 150, 'dude');
+       
+        // We need to enable physics on the this.player
+        game.physics.arcade.enable(this.player);
+      
+        // Player physics properties. Give the little guy a slight bounce.
+        this.player.body.bounce.y = 0.5;
+        this.player.body.gravity.y = 25;
+        this.player.body.collideWorldBounds = true;
+       
+        // Our two animations, walking left and right
+        this.player.animations.add('left', [1, 2, 3, 4, 5, 6], 10, true);
+        this.player.animations.add('right', [8, 9, 10, 11, 12, 13], 10, true);
+        this.player.animations.add('stand', [0, 7, 14], 10, true);
+        this.player.body.setSize(30,30,5,5);
+      
+        // Our controls.
+        this.cursors = game.input.keyboard.createCursorKeys();
+      
+        // Finally some this.stars to collect
+        this.stars = game.add.group();
+      
+        //We will enable physics for any star is created in this group
+        this.stars.enableBody = true;
+        
+        //Here we'll create 12 of them evenly spaced apart 
+        for (var i = 0; i < 12; i++) {
+            // Create a star inside of the 'this.stars'group
+            var star = this.stars.create(i * 70, 0, 'star');
+            
             // Let gravity do its thing
-            object.body.gravity.y = 300;
-        }, 1000); //10d00=100,s=1second
-
+            star.body.gravity.y = 300;
+            
+            //This just gives each star a slightly random bounce value
+            star.body.bounce.y = 0.7 + Math.random() * 0.2;
+        }
+        // The this.score
+        this.scoreText = game.add.text(16, 16, 'score: ', {
+            fontSize: '32px',
+            fill: '#000'
+        });
     },
 
     update: function() {
-        //Move the player left/rigth when an arrow key is pressed
-        if (this.left.isDown) {
-            this.player.body.velocity.x = -300;
+        // Collide the player and the platforms
+        game.physics.arcade.collide(this.player, this.platforms);
+        
+        // Reset the this.players velocity (movement)
+        this.player.body.velocity.x = 0;
+        if (this.cursors.left.isDown) {
+            //Move to the left
+            this.player.body.velocity.x = -150;
+           
             this.player.animations.play('left');
         }
-        else if (this.right.isDown) {
-            this.player.body.velocity.x = 300;
+        else if (this.cursors.right.isDown) {
+            //Move to the right
+            this.player.body.velocity.x = 150;
+           
             this.player.animations.play('right');
         }
-        //Stop the player when no key is pressed 
         else {
-            this.player.body.velocity.x = 0;
-            this.player.animations.stop();
-            this.player.frame = 7;
-        }
+            // Stand still
+            this.player.animations.play('stand');
 
-        //Collision between the player and the ibject 
-        game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
+        }
+        //Allow the this.player to jump if they are touching the ground.
+        if (this.cursors.up.isDown && this.player.body.touching.down) {
+            this.player.body.velocity.y = -350;
+        }
+        //Collide the stars and the platforms
+        game.physics.arcade.collide(this.stars, this.platforms);
+        
+        // Checks to see if the this.player overlaps with any of the this.stars, if he does call the collectStar function
+        game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
 
     },
-    hitObject: function(player, object) {
-        object.kill();
+    collectStar: function(player, star) {
+        // Remove the star from the screen
+        this.score++;
+        star.kill();
+        this.scoreText.text = "score: " +this.score;
+        
+        
     }
 
 };
