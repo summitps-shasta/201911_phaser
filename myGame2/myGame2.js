@@ -42,6 +42,8 @@ game_state.main.prototype = {
         }, 1000) // 1000ms = 1 second;
     },
     update: function() {
+        game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
+
         // Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
@@ -53,13 +55,11 @@ game_state.main.prototype = {
         else {
             this.player.body.velocity.x = 0;
             // Collision between the player and the object
-            game.physics.arcade.overlap(this.player, this.objects, this.hitObjectbjects, null, this);
         }
     },
     hitObject: function(player, object) {
         object.kill();
-    },
+    }
 };
 game.state.add('main', game_state.main);
 game.state.start('main');
-
