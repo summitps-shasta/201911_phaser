@@ -1,13 +1,14 @@
 /*global Phaser*/
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
-var game_state = {}
+var game_state = {};
 
 game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+//      game.load.spritesheet('player', 'assets/egg.png', 128, 128);
+        game.load.spritesheet('player', 'assets/egg.png', 128, 128);
         game.load.image('object', 'assets/object.png');
     },
 
@@ -39,7 +40,7 @@ game_state.main.prototype = {
             var object = _this.objects.create(Math.random() * 800, -64, 'object');
             // Let gravity do its thing
             object.body.gravity.y = 300;
-        }, 1000) // 1000 = 1000ms = 1 second
+        }, 1000); // 1000 = 1000ms = 1 second
     },
     update: function() {
         // Move the player left/right when an arrow key is pressed
