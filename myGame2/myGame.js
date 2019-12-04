@@ -1,14 +1,13 @@
-/*global Phaser*/
+/*global Phaser game*/
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
 var game_state = {};
 
 game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('sky', 'assets/sky.png');
-        game.load.image('ground', 'assets/platform.png');
+        game.load.image('sky', 'assets/wall.png');
+        game.load.image('ground', 'assets/rock.png');
         game.load.spritesheet('star', 'assets/Magic Orb (2).png', 64, 64);
         game.load.spritesheet('dude', 'assets/Horn Buddy.png', 128, 128);
     },
@@ -21,7 +20,7 @@ game_state.main.prototype = {
         
         //The platforms group contains the ground and the 2 ledges we can jump on
         this.platforms = game.add.group();
-        
+
         //We will enable physics for any object that is creat4ed in this group
         this.platforms.enableBody = true;
         
@@ -35,10 +34,15 @@ game_state.main.prototype = {
         ground.body.immovable = true;
         
         //Now let's create two ledges
-        var ledge = this.platforms.create(400, 150, 'ground');
+        var ledge = this.platforms.create(600, 350, 'ground');
         ledge.body.immovable = true;
-        var ledge2 = this.platforms.create(0, 350, 'ground');
+        ledge.scale.setTo(0.75);
+        var ledge2 = this.platforms.create(-400, 350, 'ground');
         ledge2.body.immovable = true;
+        ledge2.scale.setTo(0.75);
+        var ledge3 = this.platforms.create(100, 125, 'ground');
+        ledge3.body.immovable = true;
+        ledge3.scale.setTo(0.75);
         
         //We're going to be using physics, so enable the Arcade Physics system
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -70,9 +74,9 @@ game_state.main.prototype = {
         this.stars.enableBody = true;
         
         //Here we'll create 12 of them evenly spaced apart
-        for (var i = 0; i < 12; i++) {
+        for (var i = 0; i < 14; i++) {
             //Create a star inside of the this.stars' group
-            var star = this.stars.create(i * 70, 0, 'star');
+            var star = this.stars.create(i * 60, 0, 'star');
             
             //Let gravity do its thing
             star.body.gravity.y = 300;
@@ -83,7 +87,7 @@ game_state.main.prototype = {
             //The this.score
             this.scoreText = game.add.text(16, 16, "score: ", {
                 fontSize: '32px',
-                fill: '#000'
+                fill: '#fff'
             });
             this.score = 0;
         }
@@ -126,8 +130,6 @@ game_state.main.prototype = {
         // Checks to see if this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
         
-        game.debug.body(this.player);
-        
     },
     
     collectStar: function(player, star) {
@@ -141,4 +143,4 @@ game_state.main.prototype = {
 };
 
 game.state.add('main', game_state.main);
-//game.state.start('main');
+// game.state.start('main');
