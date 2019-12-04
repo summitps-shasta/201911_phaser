@@ -7,14 +7,45 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
+        game.load.image('sky', 'assets/sky.png')
+        game.load.image('ground', 'assets/platform.png')
+        game.load.image('star', 'assets/star.png')
         game.load.spritesheet('player', 'assets/player.png', 160, 160);
         game.load.image('object', 'assets/object.png');
+    
     },
 
     create: function() {
         // Set the background color to blue
-        game.stage.backgroundColor = '#ffff00'
-        ;
+        game.stage.backgroundColor = '#ffff00';
+        game.add.sprite(0,0, 'star');
+        // A simple background for our game
+        game.add.sprite(0, 0, 'sky');
+        // The platforms gorup contains the ground and the 2 ledges we can jump on
+        this.platforms = game.add.group();
+        // We will enable physics for any object that is created in this group
+        this.platforms.enableBody = true;
+        // Here we create the ground.
+        var ground = this.platforms.create(0, game.world.height - 64, 'ground');
+        // Scale it to fit the width of the game (the original sprite is 400x32 in size)
+        ground.scale.setTo(2, 2);
+        // This stops it from falling away when you jump on it
+        ground.body.immovable = true;
+        // Now let's create two ledges
+        var ledge = this.platforms.create(180, 180, 'ground');
+        ledge.body.immovable = true;
+        // We're going to be using physics, so enable the Arcade Physics system
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        // The this.player and its settings
+        this.player = game.add.sprite(32, - 150, 'player');
+        // We need to enable physics on the this.player
+        game.physics.arcade.enable(this.player);
+        // Player physics properties. Give the little guy a slight bounce. 
+        this.player.body.bounce.y = 0;
+        this.player.body.gravity.y = 0;
+        this.player.body.collideWorldBound = true;
+        // Our controls.
+        this.cursors = game.input.keyboard.createCursorKeys();
         // Start the arcade physics system (for movements and collisions)
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // Add the player at the bottom of the screen
@@ -56,6 +87,7 @@ game_state.main.prototype = {
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
             this.player.animations.play('right');
+            
         }
         // Stop the player when no key is pressed
         else {
@@ -64,16 +96,6 @@ game_state.main.prototype = {
         // Collision between the player and object
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
 
-//        if (this.cursors.left.isDown) {
-//            // Move to the left
-//            this.player.body.velocity.x = -150;
-//            this.player.animations.play('left');
-//        }
-//        if (this.cursors.right.isDown) {
-//            // Move to the right
-//            this.player.body.velocity.x = 150
-//            this.player.animations.play('right')
-//        }
 
     },
 
