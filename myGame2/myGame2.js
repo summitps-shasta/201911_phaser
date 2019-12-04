@@ -7,12 +7,12 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
+        game.load.image('player', 'assets/tom.png');
         game.load.image('object', 'assets/object.png');
     },
     
     create: function() {
-        game.stage.backgroundColor= '#3598db';
+        game.stage.backgroundColor= '#9876db';
         
         game.physics.startSystem(Phaser.Physics.ARCADE);
         this.player = game.add.sprite(200, 400, 'player');
@@ -32,18 +32,22 @@ game_state.main.prototype = {
 
     update: function() {
         if (this.left.isDown) {
-            this.player.body.velocity.x = -300;
+            this.player.body.velocity.x = -600;
         }
         else if (this.right.isDown) {
-            this.player.body.velocity.x = 300;
+            this.player.body.velocity.x = 600;
         }
         else {
             this.player.body.velocity.x = 0;
         }
-        
+        game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
         
         
     },
+    
+    hitObject: function(player, object){
+        object.kill();
+    }
 
 };
 game.state.add('main', game_state.main);
