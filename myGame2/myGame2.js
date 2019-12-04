@@ -5,19 +5,17 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-//      game.load.image('player', 'assets/player.png');
-        game.load.image('object', 'assets/object.png');
         game.load.spritesheet('player', 'assets/nar 1.png', 128, 128, 5);
-
+        game.load.image('object', 'assets/object.png');    //  BALL preload
         game.load.image('sky',    'assets/sky.png');       //  SKY  preload
         game.load.image('ground', 'assets/platform.png');  //  PLAT preload
         game.load.image('star',   'assets/star.png');      //  STAR preload
     },
 
     create: function() {
+        this.rick_score = 0;
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-//      game.stage.backgroundColor = '#3598db';
         game.add.sprite(0, 0, 'sky');   //  SKY  create
         game.add.sprite(0, 0, 'star');  //  STAR create
 
@@ -32,14 +30,19 @@ game_state.main.prototype = {
         this.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 
-        this.objects = game.add.group();
-        this.objects.enableBody = true;
-        var _this = this;
-        setInterval(function() {
-            var object =
-              _this.objects.create(
-              Math.random() * 800, -64, 'object');
+        //  falling red balls, set a timer to create one/second
+        this.objects = game.add.group();    //  BALL, create group objects
+        this.objects.enableBody = true;     //  BALL, activate collisions
+
+        var _this = this;                   //  BALL, need this for timer
+        var delayTimer = setInterval(function() {  //  BALL, every second timer
+            var object = _this.objects.create(
+              Math.random()*800,    //  x position
+              -64,                  //  y position (just above viewable window)
+              'object'
+              );
             object.body.gravity.y = 300;
+            //  WARNING: disable this timer before switching state (see below)
         }, 1000);
 
     	this.platforms = game.add.group();  //  PLAT create
@@ -52,6 +55,17 @@ game_state.main.prototype = {
     	ledge1.body.immovable = true;  //  PLAT create
     	var ledge2 = this.platforms.create(300, 300, 'ground');  //  PLAT create
     	ledge2.body.immovable = true;  //  PLAT create
+
+        //  Simple check for keyboard, press x to return to intro screen
+        game.input.keyboard.onPressCallback = function(e) {
+            console.log("key pressed: ", e);
+            if (e == 'x') {
+                //  disable ball timer, disable keyboard callback
+                clearInterval(delayTimer);
+                game.input.keyboard.onPressCallback = null;
+                game.state.start('intro');
+            }
+        }
     },
 
     update: function() {
@@ -69,12 +83,25 @@ game_state.main.prototype = {
             this.player.frame = 0;
         }
 
+        if (0) {  //  this is debug code, enable to see list of active objects
+            console.log("---");
+            this.objects.forEach(function(item) {
+                console.log("ball y: " + item.position.y);
+                if (item.position.y > 400) {
+                    this.objects.remove(item, false, false);
+                    item.destroy();
+                }
+            }, this);
+        } 
+
         game.physics.arcade.overlap(this.player, this.objects, this.hitObject, null, this);
     },
 
     hitObject: function(player, object) {
+        this.rick_score++;
+        console.log("score: " + this.rick_score);
         object.kill();
-    }
+    },
     
 };
 
