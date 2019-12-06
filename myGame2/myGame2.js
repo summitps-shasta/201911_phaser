@@ -11,6 +11,7 @@ game_state.main.prototype = {
         game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
         game.load.spritesheet('dude', 'assets/thing.png', 64, 64);
+        game.load.image('wall', 'assets/wall.png');
     },
 
     create: function() {
@@ -52,6 +53,25 @@ game_state.main.prototype = {
          // Now let's create two ledges 
         var ledge_r = this.platforms.create(500, 400, 'ground');
         ledge_r.body.immovable = true;
+         
+         // Now let's create two ledges 
+        var ledge_tr = this.platforms.create(650, 50, 'ground');
+        ledge_tr.body.immovable = true;
+        
+         
+         // Now let's create two ledges 
+        var ledge_tl = this.platforms.create(-250, 50, 'ground');
+        ledge_tl.body.immovable = true;
+        
+        
+        this.walls = game.add.group();
+        this.walls.enableBody = true;
+        
+        var wall_b = this.walls.create(400, 230, 'wall');
+        wall_b.body.immovable = true;
+        
+         var wall_t = this.walls.create(400, -300, 'wall');
+        wall_t.body.immovable = true;
       
         // The this.player and its settings 
         this.player = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -63,12 +83,12 @@ game_state.main.prototype = {
         this.player.body.bounce.y = 0;
         this.player.body.gravity.y = 100;
         this.player.body.collideWorldBounds = true;
+        this.player.body.setSize(28, 46, 14, 10);
        
         // Our two animations, walking left and right
         this.player.animations.add('left', [1, 2, 3, 4, 5, 6], 10, true);
         this.player.animations.add('right', [8, 9, 10, 11, 12, 13], 10, true);
-        this.player.animations.add('stand', [0, 7, 14], 10, true);
-        this.player.body.setSize(30,30,5,5);
+        this.player.animations.add('stand', [0, 7, 14], 3, true);
       
         // Our controls.
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -100,6 +120,7 @@ game_state.main.prototype = {
     update: function() {
         // Collide the player and the platforms
         game.physics.arcade.collide(this.player, this.platforms);
+        game.physics.arcade.collide(this.player, this.walls);
         
         // Reset the this.players velocity (movement)
         this.player.body.velocity.x = 0;
@@ -126,6 +147,7 @@ game_state.main.prototype = {
         }
         //Collide the stars and the platforms
         game.physics.arcade.collide(this.stars, this.platforms);
+        game.physics.arcade.collide(this.stars, this.walls);
         
         // Checks to see if the this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
