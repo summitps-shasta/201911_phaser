@@ -1,9 +1,9 @@
-/*global Phaser*/
+/*global Phaser game*/
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
-var game_state = {}
+var game_state = {};
 
 game_state.main = function() {};
+
 game_state.main.prototype = {
 
     preload: function() {
@@ -16,7 +16,9 @@ game_state.main.prototype = {
     create: function() {
         
         this.score = 0;
-        
+
+        game.stage.backgroundColor = "#ff00ff";
+
         // We're going to be using physics, so enable the Arcade Physics system 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.sprite(0, 0, 'star');
@@ -58,8 +60,8 @@ game_state.main.prototype = {
         game.physics.arcade.enable(this.player);
       
         // Player physics properties. Give the little guy a slight bounce.
-        this.player.body.bounce.y = 0.5;
-        this.player.body.gravity.y = 25;
+        this.player.body.bounce.y = 0;
+        this.player.body.gravity.y = 100;
         this.player.body.collideWorldBounds = true;
        
         // Our two animations, walking left and right
@@ -127,7 +129,10 @@ game_state.main.prototype = {
         
         // Checks to see if the this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
-
+        
+        if(this.score == 12){
+            game.state.start('ending');
+        }
     },
     collectStar: function(player, star) {
         // Remove the star from the screen
@@ -140,4 +145,4 @@ game_state.main.prototype = {
 
 };
 game.state.add('main', game_state.main);
-game.state.start('main');
+// game.state.start('main');
