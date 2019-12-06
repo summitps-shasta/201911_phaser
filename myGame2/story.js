@@ -7,35 +7,23 @@ game_state.story.prototype = {
 
     preload: function() {
         game.load.spritesheet('intro', 'assets/Intro Scene.png', 800, 600);
-        game.load.image('speech1', 'assets/speech1.png');
-        game.load.image('speech2', 'assets/speech2.png');
-        game.load.image('speech3', 'assets/speech3.png');
-        game.load.image('speech4', 'assets/speech4.png');
+        game.load.spritesheet('speech', 'assets/speech1.png', 783, 381);
     },
 
     create: function() {
         this.sprite = game.add.sprite(0, 0, 'intro');
         this.sprite.animations.add('story', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], 6, false);
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        // this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+        this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+        this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+        // this.pointer = game.input.Phaser.DeviceButton(this, Phaser.Pointer.LEFT_BUTTON);
 
-        this.speech1 = game.add.sprite(175, 325, 'speech1');
-        this.speech1.scale.setTo(0.55);
-        this.speech1.visible = true;
+        this.speech = game.add.sprite(75, 300, 'speech');
+        this.speech.scale.setTo(0.55);
+        this.speech.animations.add('speech', [0, 1], 3, false);
+        this.speech.animations.add('speech2', [2, 3], 1, false);
 
-        this.speech2 = game.add.sprite(75, 325, 'speech2');
-        this.speech2.scale.setTo(0.55);
-        this.speech2.visible = false;
-
-        this.speech3 = game.add.sprite(75, 325, 'speech3');
-        this.speech3.scale.setTo(0.55);
-        this.speech3.visible = false;
-
-        this.speech4 = game.add.sprite(75, 325, 'speech4');
-        this.speech4.scale.setTo(0.55);
-        this.speech4.visible = false;
-
-        this.text = game.add.text(635, 575, "Press space to continue");
+        this.text = game.add.text(635, 575, "Press space to start");
 
         //aligns text
         this.text.anchor.set(0.5);
@@ -45,52 +33,59 @@ game_state.story.prototype = {
         this.text.fontSize = 20;
 
         this.text.fill = '#fff';
-
-        this.counterText = game.add.text(16, 16, "counter: ", {
-            fontSize: '32px',
-            fill: '#fff'
-        });
-        this.counter = 0;
+        
+        this.text2 = game.add.text(400, 575, "Click to light fire!");
+        this.text2.visible = false;
+        
+        this.text2.anchor.set(0.5);
+        this.text2.align = 'center';
+        this.text2.font = 'Courier';
+        this.text2.fontSize = 20;
+        this.text2.fontWeight = 'bold';
+        this.text2.fill = '#fff';
+        
+        this.text3 = game.add.text(635, 575, "Press down arrow\nto continue");
+        this.text3.visible = false;
+        
+        this.text3.anchor.set(0.5);
+        this.text3.align = 'center';
+        this.text3.font = 'Courier';
+        this.text3.fontSize = 20;
+        this.text3.fontWeight = 'bold';
+        this.text3.fill = '#fff';
+        
+        this.text4 = game.add.text(635, 575, "Press right arrow to start");
+        this.text4.visible = false;
+        
+        this.text4.anchor.set(0.5);
+        this.text4.align = 'center';
+        this.text4.font = 'Courier';
+        this.text4.fontSize = 20;
+        this.text4.fontWeight = 'bold';
+        this.text4.fill = '#fff';
     },
 
     update: function() {
-
-        // if (this.spaceKey.isDown) {
-        //     this.sprite.animations.play('story');
-        // }
-        if (this.sprite.animations.isPlay) {
-            this.sprite.frame = 24;
-        }
-
         if (this.spaceKey.isDown) {
-            if (this.counter == 0) {
-                this.speech1.visible = false;
-                this.speech2.visible = true;
-                this.counter++;
-            }
-            else if (this.counter == 1) {
-                this.speech2.visible = false;
-                this.sprite.animations.play('story');
-                this.counter++;
-            }
-            else if (this.counter == 2) {
-                this.speech3.visible = true;
-                this.counter++;
-            }
-            else if (this.counter == 3) {
-                this.speech3.visible = false;
-                this.speech4.visible = true;
-                this.counter++;
-            }
-            else if (this.counter == 4) {
-                this.speech4.visible = false;
-                game.state.start('main');
-            }
+            this.speech.animations.play('speech');
+            this.text.visible = false;
+            this.text2.visible = true;
+        }
+        
+        if(game.input.activePointer.leftButton.isDown) {
+            this.sprite.animations.play('story');
+            this.text2.visible = false;
+            this.text3.visible = true;
         }
 
-        this.counterText.text = "counter: " + this.counter;
-
-
+        if (this.downKey.isDown) {
+            this.speech.animations.play('speech2');
+            this.text3.visible = false;
+            this.text4.visible = true;
+        }
+        if (this.rightKey.isDown) {
+            game.state.start('title');
+        }
     },
 };
 

@@ -49,7 +49,7 @@ game_state.main.prototype = {
         
         //The this.player and its settings
         this.player = game.add.sprite(32, game.world.height - 300, 'dude');
-        
+
         //We need to enable physics on this.player
         game.physics.arcade.enable(this.player);
         
@@ -66,15 +66,15 @@ game_state.main.prototype = {
         
         //Our controls
         this.cursors = game.input.keyboard.createCursorKeys();
-        
+
         //Finally some this.stars to collect
         this.stars = game.add.group();
-        
+
         //We will enable physics for any star that is created in this group
         this.stars.enableBody = true;
         
         //Here we'll create 12 of them evenly spaced apart
-        for (var i = 0; i < 14; i++) {
+        for (var i = 0; i < 13; i++) {
             //Create a star inside of the this.stars' group
             var star = this.stars.create(i * 60, 0, 'star');
             
@@ -90,10 +90,27 @@ game_state.main.prototype = {
                 fill: '#fff'
             });
             this.score = 0;
+
+            this.text1 = game.add.text(550, 575, "right/left arrow keys = move right/left");
+            this.text1.anchor.set(0.5);
+            this.text1.align = 'center';
+            this.text1.font = 'Courier';
+            this.text1.fontWeight = 'bold';
+            this.text1.fontSize = '20px';
+            this.text1.fill = '#fff';
+
+            this.text2 = game.add.text(150, 575, "up arrow key = jump up");
+            this.text2.anchor.set(0.5);
+            this.text2.align = 'center';
+            this.text2.font = 'Courier';
+            this.text2.fontWeight = 'bold';
+            this.text2.fontSize = 20;
+            this.text2.fill = '#fff';
         }
     },
     
     update: function() {
+        
         //Collide the player and the platforms
          game.physics.arcade.collide(this.player, this.platforms);
         
@@ -129,6 +146,10 @@ game_state.main.prototype = {
         
         // Checks to see if this.player overlaps with any of the this.stars, if he does call the collectStar function
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
+        
+        if (this.score == 13) {
+            game.state.start('ending');
+        }
         
     },
     
