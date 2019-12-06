@@ -7,11 +7,14 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
     preload: function() {
-        game.load.spritesheet('player', 'assets/gg.png', 128, 128);
-        game.load.image('object', 'assets/object.png');
+        game.load.spritesheet('player', 'assets/gg.png', 128, 128, 5);
+        game.load.image('sky',    'assets/sky.png');       //  SKY  preload
+        game.load.image('object',    'assets/Ice.png');       //  SKY  preload
+        game.load.image('ground', 'assets/platform.png');  //  PLAT preload
     },
 
     create: function() {
+        
         //Set the background color to blue 
         game.stage.backgroundColor = '#3598db';
 
@@ -19,7 +22,7 @@ game_state.main.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Add the player at the bottom of the screen
-        this.player = game.add.sprite(200, 400, 'player');
+        this.player = game.add.sprite(200, 430, 'player');
 
         //We need to enable physics on the this.player
         game.physics.arcade.enable(this.player);
@@ -42,6 +45,17 @@ game_state.main.prototype = {
 
         //Anchor this object to _this variable
         var _this = this;
+        
+        this.platforms = game.add.group();  //  PLAT create
+    	this.platforms.enableBody = true;   //  PLAT create
+    	var ground = this.platforms.create(0, game.world.height - 64, 'ground');  //  PLAT create
+    	ground.scale.setTo(2, 2);  //  PLAT create
+    	ground.body.immovable = true;  //  PLAT create
+    	
+    	var ledge1 = this.platforms.create(0, 100, 'ground');  //  PLAT create
+    	ledge1.body.immovable = true;  //  PLAT create
+    	var ledge2 = this.platforms.create(200, 150, 'ground');  //  PLAT create
+    	ledge2.body.immovable = true;  //  PLAT create
 
         //Create objects over time
         setInterval(function() {
@@ -53,38 +67,26 @@ game_state.main.prototype = {
         }, 1000) // 1000 = 1000ms = 1 second};
         
         //Our two aninmations, walking left and right
-        this.player.animations.add('left',[4,5], 10, true);
-        this.player.animations.add('right',[2,3], 10, true);
-        
-        if(this.cursors.left.isDown) {
-            //Move to the left
-            this.player.body.velocity.x = -150;
-            
-            this.player.animations.play('left');
-            
-        }
-            
-            if(this.cursors.right.isDown){
-                //Move to the right
-                this.player.body.velocity.x = -150;
-                
-                this.player.animations.play('right');
-            
-        }
-         this.player.animations.stop();
-         
-         this.player.frame = 4;
+        this.player.animations.add('right', [1, 2], 10, true);
+        this.player.animations.add('left',  [3, 4], 10, true);
+
+         //The this.score
+        this.scoreText = game.add.text(16, 16, 'score: ', {
+            fontsize: '32px',
+            fill: '#000'
+        });
+        this.score = 0;
     },
 
     update: function() {
         //Move the player left/right when an arrow key is pressed
         if (this.left.isDown) {
             this.player.body.velocity.x = -300;
-            this.player.frame = 4,5;
+            this.player.animations.play('left');
         }
         else if (this.right.isDown) {
             this.player.body.velocity.x = 300;
-            this.player.frame = 2,3;
+            this.player.animations.play('right');
         }
         //Stop the player when no key is pressed
         else {
@@ -95,9 +97,13 @@ game_state.main.prototype = {
         game.physics.arcade.overlap(this.player,this.objects,this.hitObject,null,this);
         
     },
-    hitObject: function(player,object){
+      hitObject: function(player, object) {
+        this.score++;
+        this.scoreText.text = "score: " + this.score;
         object.kill();
     }
+    
+    
 
   
     };
