@@ -11,8 +11,8 @@ game_state.ending.prototype = {
 
     create: function() {
         this.ending = game.add.sprite(0, 0, 'ending');
-        this.ending.animations.add('ending', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], 6, false);
-        this.ending.animations.add('ending2', [12, 13, 14, 15], 6, true);
+        this.ending.animations.add('ending', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15, 12, 13, 14, 15], 6, false);
+        // this.ending.animations.add('ending2', [12, 13, 14, 15], 6, true);
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
         this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
@@ -66,13 +66,7 @@ game_state.ending.prototype = {
             this.text2.visible = false;
             this.text.visible = true;
         }
-        if (this.ending.animations.isPlay) {
-            this.ending.animations.play('ending2');
-        }
-        // if(this.downKey.isDown) {
-        //     this.ending.animations.play('ending2');
-        //     this.text.visible = true;
-        // }
+        
         
         if (this.rightKey.isDown) {
             this.text.visible = false;
