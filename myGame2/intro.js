@@ -17,6 +17,13 @@ game_state.intro.prototype = {
         this.player.body.immovable = true;
         this.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
         this.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+
+        this.text = game.add.text(
+                    20, 20,
+                    'play: cursor keys\nx: quit', {
+                      fontSize: '32px',
+                      fill: '#000'
+                    });
     },
 
     update: function() {
