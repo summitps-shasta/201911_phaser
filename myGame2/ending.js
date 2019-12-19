@@ -5,7 +5,7 @@ game_state.ending = function() {};
 game_state.ending.prototype = {
 
     preload: function() {
-        game.load.image('ending', 'assets/baddie.png');
+        game.load.image('ending', 'assets/winscreen.png');
 
     },
 

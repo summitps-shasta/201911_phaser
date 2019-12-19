@@ -25,17 +25,18 @@ game_state.main.prototype = {
         game.add.sprite(0, 0, 'sky');
 
         // door
-        this.thedoor = game.add.sprite(40, 486, 'thedoor');
 
         //The platforms group contains the ground and the 2 ledges we can jump on
         this.platforms = game.add.group();
+        
+        //this.thedoor = game.add.sprite(40, 486, 'thedoor');
 
         //We will enable physics for any object that is creat4ed in this group
         this.platforms.enableBody = true;
 
         //this.thedoor = game.add.group();
 
-        this.thedoor.enableBody = true;
+        //this.thedoor.enableBody = true;
 
 
 
@@ -103,11 +104,15 @@ game_state.main.prototype = {
 
             //The this.score
             this.score = 0;
+            
+            
 
             this.scoreText = game.add.text(16, 16, "Keys: ", {
                 fontSize: '32px',
                 fill: '#fff'
             });
+            
+            
         }
     },
 
@@ -146,8 +151,16 @@ game_state.main.prototype = {
 
         //Allow the this.player to jump if they are touching the ground.
         if (this.cursors.up.isDown && this.player.body.touching.down) {
-            this.player.body.velocity.y = -250;
+            this.player.body.velocity.y =
+            
+            
+            -250;
         }
+        
+        if (this.score > 13) {
+                alert('You have collected all 14 keys!');
+                game.state.start('ending');
+            }
 
 
 
@@ -155,8 +168,8 @@ game_state.main.prototype = {
 
 
         // Checks to see if this.player overlaps with any of the this.stars, if he does call the collectStar function
+         //game.physics.arcade.overlap(this.player, this.thedoor, this.doorEnding, null, this);
         game.physics.arcade.overlap(this.player, this.stars, this.collectStar, null, this);
-        game.physics.arcade.overlap(this.player, this.thedoor, this.doorEnding, null, this);
 
 
         //var doortouching = 0;
@@ -168,6 +181,8 @@ game_state.main.prototype = {
 
     },
 
+    
+
     collectStar: function(player, star) {
         //Removes the star from the screen
         star.kill();
@@ -176,17 +191,20 @@ game_state.main.prototype = {
         this.scoreText.text = "Keys: " + this.score;
 
     },
+    
+          
+    
+    //doorEnding: function(player, door) {
+        //alert("asdkfjasdf");
+        //if (this.score > 0) {
 
-    doorEnding: function(player, door) {
-        if (this.score == 1) {
+            //game.state.start('ending');
+            //alert('hiugf');
 
-            game.state.start('ending');
-            alert('hiugf');
+        };
+    //},
 
-        }
-    },
-
-};
+//};
 
 game.state.add('main', game_state.main);
 //game.state.start('main');
