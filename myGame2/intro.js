@@ -5,36 +5,32 @@ game_state.intro = function() {};
 game_state.intro.prototype = {
 
     preload: function() {
-        game.load.image('player', 'assets/player.png');
     },
 
     create: function() {
         game.stage.backgroundColor = '#009800';
 
-        this.player = game.add.sprite(200, 400, 'player');
-        game.physics.arcade.enable(this.player);
-        this.player.enableBody = true;
-        this.player.body.immovable = true;
-        this.left = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        this.right = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-
         this.text = game.add.text(
-                    20, 20,
-                    'play: cursor keys\nx: quit', {
-                      fontSize: '32px',
-                      fill: '#000'
-                    });
+            20, 20,
+            's: start\nx: quit', {
+              fontSize: '32px',
+              fill: '#000'
+            }
+        );
+
+        //  Simple check for keyboard, press s switch to main game screen
+        game.input.keyboard.onPressCallback = function(e) {
+            console.log("key pressed: ", e);
+            if (e == 's') {
+                //  disable keyboard callback
+                game.input.keyboard.onPressCallback = null;
+                game.state.start('main');
+            }
+        }
+
     },
 
     update: function() {
-        if (this.left.isDown) {
-            game.state.start('main');
-            //  alert('down');
-        }
-        else if (this.right.isDown) {
-            game.state.start('main');
-            //  alert('down');
-        }
     }
 
 };
