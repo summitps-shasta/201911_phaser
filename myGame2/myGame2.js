@@ -95,3 +95,8 @@ game_state.main.prototype = {
 };
 
 game.state.add('main', game_state.main);
+
+/*  reference, it may be wise to remove objects at some point
+    https://dustinpfister.github.io/2018/08/26/phaser-group-remove/
+
+*/
