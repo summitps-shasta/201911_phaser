@@ -14,11 +14,11 @@ game_state.intro.prototype = {
     create: function() {
         game.globalVars.running = 0;
         var title = game.add.audio('title');
-        game.globalVars.start = game.add.audio('start');
         title.play();
+        game.globalVars.start = game.add.audio('start');
         this.twintowers = game.add.sprite(0,0,'towers');
         this.Moneky = game.add.sprite(0,0, 'Moneky');
-        this.twintowers.animations.add('smoke', [0, 1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23], 24, true);
+        this.twintowers.animations.add('smoke', [0, 1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], 24, true);
         this.twintowers.animations.play('smoke');
         game.input.keyboard.onPressCallback = function(e) {
             console.log("key pressed: ", e);
@@ -28,19 +28,18 @@ game_state.intro.prototype = {
                 game.input.keyboard.onPressCallback = null;
                 title.stop();
                 game.globalVars.start.play();
-                game.state.start('main');
+                game.state.start('first');
             }
         }
 
     },
     
     fadePicture: function(){
-        game.add.tween(this.Moneky).to( {alpha : 0}, 500, Phaser.Easing.Linear.None, true);
+        game.add.tween(this.Moneky).to( {alpha : 0}, 250, Phaser.Easing.Linear.None, true);
     },
-    
     update: function() {
         game.debug.text('Elapsed seconds: ' + game.time.totalElapsedSeconds(), 32, 32);
-        if(game.time.totalElapsedSeconds() >= 5){
+        if(game.time.totalElapsedSeconds() >= 9){
             this.fadePicture();
         }
     },
