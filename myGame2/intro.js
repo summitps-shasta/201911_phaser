@@ -12,6 +12,7 @@ game_state.intro.prototype = {
     },
 
     create: function() {
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         game.globalVars.running = 0;
         var title = game.add.audio('title');
         title.play();

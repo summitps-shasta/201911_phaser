@@ -16,7 +16,7 @@ var config = {
 var game = new Phaser.Game(config);
 
 game.globalVars = {
-    
+    damage: 0
 };
 var game_state = {
     first: function() {}
@@ -36,7 +36,7 @@ game_state.first.prototype = {
         game.load.image('window','assets/window.png');
         game.load.image('table','assets/table.png');
         game.load.image('macintosh','assets/macintosh.png');
-        game.load.spritesheet('door','assets/door.png',100,288);
+        game.load.spritesheet('door','assets/door.png',38,288);
     },
 
     create: function() {
@@ -90,7 +90,7 @@ game_state.first.prototype = {
         this.stripl.body.immovable =true;
         game.physics.arcade.enable(this.fire); 
         this.fire.enableBody = true;
-        this.door = game.add.sprite(699,350,'door');
+        this.door = game.add.sprite(760,350,'door');
         game.physics.arcade.enable(this.door);
         this.door.enableBody = true;
         this.door.body.immovable = true;
