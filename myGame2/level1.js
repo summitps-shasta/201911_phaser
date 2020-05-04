@@ -7,7 +7,6 @@ game_state.second.prototype = {
         game.load.spritesheet('player','assets/prot.png',96,216);
         game.load.spritesheet('door','assets/door.png',38,288);
         game.load.image('rim','assets/room2floor.png');
-        //game.load.image('strip','assets/strip.png');
         game.load.image('wall','assets/room2wall.png');
         game.load.spritesheet('room2','assets/room2.png',800,600);
         game.load.spritesheet('tentacles','assets/tentacles.png',33,99);
