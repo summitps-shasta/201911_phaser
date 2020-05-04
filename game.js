@@ -1,7 +1,7 @@
 /*global Phaser*/
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
-var game_state = {}
+var game_state = {};
 
 var wallTile;
 
@@ -17,7 +17,8 @@ game_state.main.prototype = {
     },
 
     create: function() {
-        // game.add.sprite(400, 300, 'key');
+
+        console.log("start");
         
         wallTile = game.add.tileSprite(0, 0, 800, 600, 'background');
         this.door = game.add.sprite(580, -25, 'door');
@@ -40,8 +41,7 @@ game_state.main.prototype = {
         var ledge3 = this.platforms.create(-300, 325, 'platform');
         ledge3.body.immovable = true;
         ledge3.scale.setTo(0.75);
-        
-        
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         this.player = game.add.sprite(32, game.world.height - 300, 'girl');
@@ -57,20 +57,21 @@ game_state.main.prototype = {
         
         this.cursors = game.input.keyboard.createCursorKeys();
     
-        this.key1 = game.add.sprite(600, 380, 'key');
-        game.physics.arcade.enable([this.player, this.key1]);
-        this.key1.enableBody = true;
-        this.key1.animations.add('bounce', [0, 1, 2, 3, 4, 5, 6, 7, 8], 10, true);
-        
-        this.player.body.onCollide = game.state.start('level 2');
+        this.key = game.add.sprite(650, 120, 'key');
+        game.physics.arcade.enable(this.key);
+        this.key.enableBody = true;
+        this.key.body.immovable = true;
+        this.key.animations.add('bounce', [0, 1, 2, 3, 4, 5, 6, 7, 8], 10, true);
+
+        this.key.body.onCollide = new Phaser.Signal();
+        this.key.body.onCollide.add(this.collide, this);
     },
 
     update: function() {
+        game.physics.arcade.collide(this.player, this.key);
         game.physics.arcade.collide(this.player, this.platforms);
-        game.physics.arcade.collide(this.key, this.platforms);
-        game.physics.arcade.collide(this.key, this.player);
-        
-        this.key1.animations.play('bounce');
+
+        this.key.animations.play('bounce');
         
         this.player.body.velocity.x = 0;
         
@@ -95,6 +96,10 @@ game_state.main.prototype = {
         //     game.state.start('level2');
         // }
     },
+
+    collide: function() {
+        game.state.start('level2')
+    }
 }
 game.state.add('main', game_state.main);
 game.state.start('main');
