@@ -37,6 +37,7 @@ game_state.first.prototype = {
         game.load.image('table','assets/table.png');
         game.load.image('macintosh','assets/macintosh.png');
         game.load.spritesheet('door','assets/door.png',38,288);
+       
     },
 
     create: function() {

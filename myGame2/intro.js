@@ -8,6 +8,7 @@ game_state.intro.prototype = {
         game.load.audio('start', 'assets/start.mp3');
         game.load.image('Moneky', 'assets/Moneky.png');
         game.load.spritesheet('towers', 'assets/towers.png', 800, 600);
+        game.load.audio('bg', 'assets/background.mp3');
         
     },
 
@@ -16,6 +17,7 @@ game_state.intro.prototype = {
         game.globalVars.running = 0;
         var title = game.add.audio('title');
         title.play();
+        var bg = game.add.audio('bg');
         game.globalVars.start = game.add.audio('start');
         this.twintowers = game.add.sprite(0,0,'towers');
         this.Moneky = game.add.sprite(0,0, 'Moneky');
@@ -29,6 +31,7 @@ game_state.intro.prototype = {
                 game.input.keyboard.onPressCallback = null;
                 title.stop();
                 game.globalVars.start.play();
+                bg.play();
                 game.state.start('first');
             }
         }
