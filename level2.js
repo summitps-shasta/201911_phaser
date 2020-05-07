@@ -110,7 +110,7 @@ game_state.level2.prototype = {
     },
     
     collide: function() {
-        game.state.start('main');
+        game.state.start('story3');
     }
 }
 

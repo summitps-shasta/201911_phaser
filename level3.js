@@ -1,26 +1,24 @@
 /*global Phaser game*/
 
-var game_state = {};
+var game_state = {}
+var wallTile
 
-var wallTile;
-
-game_state.main = function() {};
-game_state.main.prototype = {
+game_state.level3 = function() {};
+game_state.level3.prototype = {
 
     preload: function() {
-        game.load.image('platform', 'assets/rock-1.png');
+        game.load.image('background', 'assets/sky.png')
+        game.load.image('platform', 'assets/cloud.png');
         game.load.spritesheet('girl', 'assets/cc sprite (1).png', 200, 200);
-        game.load.image('background', 'assets/wall-1.png (1).png');
-        game.load.image('door', 'assets/door.png');
-        game.load.spritesheet('key', 'assets/key.png', 64, 64);
+        game.load.image('key', 'assets/sign.png');
+        game.load.image('spike', 'assets/spike.png');
     },
-
+    
     create: function() {
 
         console.log("start");
         
         wallTile = game.add.tileSprite(0, 0, 800, 600, 'background');
-        this.door = game.add.sprite(580, -25, 'door');
         this.platforms = game.add.group();
         this.platforms.enableBody = true;
         
@@ -31,19 +29,20 @@ game_state.main.prototype = {
         
         var ledge = this.platforms.create(500, 450, 'platform');
         ledge.body.immovable = true;
-        ledge.scale.setTo(0.75);
+        // ledge.scale.setTo(0.75);
         
-        var ledge2 = this.platforms.create(600, 200, 'platform');
+        var ledge2 = this.platforms.create(300, 265, 'platform');
         ledge2.body.immovable = true;
-        ledge2.scale.setTo(0.75);
+        // ledge2.scale.setTo(0.75);
         
-        var ledge3 = this.platforms.create(-300, 325, 'platform');
+        var ledge3 = this.platforms.create(-200, 175, 'platform');
         ledge3.body.immovable = true;
-        ledge3.scale.setTo(0.75);
+        // ledge3.scale.setTo(0.75);
+        
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
-        this.player = game.add.sprite(32, game.world.height - 300, 'girl');
+        this.player = game.add.sprite(32, -50, 'girl');
         game.physics.arcade.enable(this.player);
         this.player.body.bounce.y = 0;
         this.player.body.gravity.y = 500;
@@ -55,13 +54,27 @@ game_state.main.prototype = {
         this.player.body.setSize(95, 164, 50, 20);
         
         this.cursors = game.input.keyboard.createCursorKeys();
-    
-        this.key = game.add.sprite(650, 120, 'key');
+        
+        this.spike = game.add.sprite(400, 220, 'spike');
+        game.physics.arcade.enable(this.spike);
+        this.spike.enableBody = true;
+        this.spike.body.immovable = true;
+        
+        this.obstacle = game.add.sprite(400, 505, 'spike');
+        game.physics.arcade.enable(this.obstacle);
+        this.obstacle.enableBody = true;
+        this.obstacle.body.immovable = true;
+        
+        this.key = game.add.sprite(700, 355, 'key');
         game.physics.arcade.enable(this.key);
         this.key.enableBody = true;
         this.key.body.immovable = true;
-        this.key.animations.add('bounce', [0, 1, 2, 3, 4, 5, 6, 7, 8], 10, true);
-
+        // this.key.animations.add('bounce', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
+        
+        this.spike.body.onCollide = new Phaser.Signal();
+        this.spike.body.onCollide.add(this.reset, this);
+        this.obstacle.body.onCollide = new Phaser.Signal();
+        this.obstacle.body.onCollide.add(this.reset, this);
         this.key.body.onCollide = new Phaser.Signal();
         this.key.body.onCollide.add(this.collide, this);
     },
@@ -69,8 +82,10 @@ game_state.main.prototype = {
     update: function() {
         game.physics.arcade.collide(this.player, this.key);
         game.physics.arcade.collide(this.player, this.platforms);
+        game.physics.arcade.collide(this.player, this.spike);
+        game.physics.arcade.collide(this.player, this.obstacle);
 
-        this.key.animations.play('bounce');
+        // this.key.animations.play('bounce');
         
         this.player.body.velocity.x = 0;
         
@@ -96,8 +111,13 @@ game_state.main.prototype = {
         // }
     },
 
+    reset: function() {
+        game.state.start('level3');
+    },
+    
     collide: function() {
-        game.state.start('story2') //change back later
-    }
-}
-game.state.add('main', game_state.main);
+        game.state.start('end');
+    },
+};
+
+game.state.add('level3', game_state.level3);
