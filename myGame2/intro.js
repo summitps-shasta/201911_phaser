@@ -9,6 +9,7 @@ game_state.intro.prototype = {
         game.load.image('Moneky', 'assets/Moneky.png');
         game.load.spritesheet('towers', 'assets/towers.png', 800, 600);
         game.load.audio('bg', 'assets/background.mp3');
+        game.load.image('titlewords','assets/titlewords.jpg');
         
     },
 
@@ -20,9 +21,12 @@ game_state.intro.prototype = {
         var bg = game.add.audio('bg');
         game.globalVars.start = game.add.audio('start');
         this.twintowers = game.add.sprite(0,0,'towers');
+        this.titlewords = game.add.sprite(7,75,'titlewords');
+        this.titlewords.scale.setTo(0.8,0.9);
         this.Moneky = game.add.sprite(0,0, 'Moneky');
         this.twintowers.animations.add('smoke', [0, 1, 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17], 24, true);
         this.twintowers.animations.play('smoke');
+        
         game.input.keyboard.onPressCallback = function(e) {
             console.log("key pressed: ", e);
             if (e == 's') {

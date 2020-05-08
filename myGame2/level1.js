@@ -14,9 +14,12 @@ game_state.second.prototype = {
         game.load.image('damage', 'assets/damrim.png');
         game.load.audio('crack','assets/crack.mp3');
         game.load.audio('shock','assets/shock.mp3');
+        game.load.spritesheet('skull','assets/skull.png',96,216);
+        game.load.spritesheet('hearts', 'assets/hearts.png',800,600);
     },
 
     create: function() {
+        this.deadyet = 0;
         this.augh = game.add.audio('augh');
         this.crack= game.add.audio('crack');
         this.shock=game.add.audio('shock');
@@ -99,6 +102,8 @@ game_state.second.prototype = {
         this.damrim.alpha = 0;
         
         this.flikrcount = 0;
+        
+        //this.hearts = game.add.image(0,0,'hearts');
         
         
         
@@ -272,14 +277,14 @@ game_state.second.prototype = {
         }
         
         
-        game.debug.text('Player:' + this.player.world.x, 32,32);
-        game.debug.text('Tentacle:' + this.tentacles.world.x, 32,64);
-        game.debug.text('Elapses Seconds ' + game.time.totalElapsedSeconds(),32,96);
-        game.debug.text('striketime ' + this.striketime,32,128);
-        game.debug.text('cooldown ' + this.chill,32,160);
-        game.debug.text('damage ' + game.globalVars.damage,32,192);
         
-        if(game.globalVars.damage == 10000){
+        if(game.globalVars.damage == 10 && this.deadyet == 0){
+            this.skull = game.add.sprite(this.player.world.x, this.player.world.y,'skull');
+            this.player.kill();
+            this.deadyet = game.time.totalElapsedSeconds();
+            
+        }
+        if(game.time.totalElapsedSeconds()-this.deadyet >= 1 && this.deadyet != 0){
             game.state.start('dead');
         }
         
@@ -288,14 +293,21 @@ game_state.second.prototype = {
             this.shock.play();
             this.flikrcount = game.time.totalElapsedSeconds();
         }
+        //this.lives()
+        game.debug.text('Damage: ' + game.globalVars.damage,32,64);
         
     },
     
     
     leave: function(){
         game.state.start('third');
+        game.sound.stopAll();
     }, 
     
+    // lives: function(){
+    //     this.hearts.animations.add('animation',[game.globalVars.damage],10,false);
+    //     this.hearts.animations.play('animation');
+    // }
 
 };
 

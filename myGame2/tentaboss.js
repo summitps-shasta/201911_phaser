@@ -18,9 +18,13 @@ game_state.third.prototype = {
         game.load.audio('crack','assets/crack.mp3');
         game.load.audio('charge','assets/charge.mp3');
         game.load.spritesheet('homing','assets/homing.png',60,400);
+        game.load.spritesheet('boost', 'assets/boost.png', 60,200);
+        game.load.spritesheet('skull','assets/skull.png',96,216);
     },
 
     create: function() {
+        this.deadyet = 0;
+        this.flashable = 0;
         this.crack= game.add.audio('crack');
         this.charge=game.add.audio('charge');
         this.starttime = game.time.totalElapsedSeconds();
@@ -57,14 +61,14 @@ game_state.third.prototype = {
         
         
         
-        // this.door = game.add.sprite(775,345,'door');
+        
+        // this.door = game.add.sprite(775,235,'door');
         // game.physics.arcade.enable(this.door);
         // this.door.enableBody = true;
         // this.door.body.immovable = true;
         // this.door.animations.add('open', [0,1,2,3,4,5],10,true);
         // this.door.animations.play('open');
-        // this.door.scale.setTo(0.5,0.5);
-        
+        // this.door.scale.setTo(0.5,0.6);
         
         
         this.shadtentas = game.add.sprite(385,400,'shadtentas');
@@ -94,6 +98,18 @@ game_state.third.prototype = {
         this.bshadt.enableBody = true;
         this.bshadt.body.collideWorldBounds = true;
         //this.bshadt.animations.play('appear');
+        
+        
+        this.boost = game.add.sprite(370,407,'boost');
+        this.boost.animations.add('boost', [0,1,2,3,4,5,6,7,8,9,10,11,12,13],20,false);
+        this.boost.scale.setTo(1,1);
+        game.physics.arcade.enable(this.boost);
+        this.boost.enableBody = true;
+        this.boost.body.collideWorldBounds = true;
+        this.boost.alpha = 0;
+        //this.boost.animations.play('boost');
+        
+        
         
         this.shados = game.add.sprite(0,0, 'shados');
         this.shados.animations.add('awakening', [22,22,22,22,22,22,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 6, false);
@@ -183,8 +199,15 @@ game_state.third.prototype = {
         
         this.sequence = 0;
         
-        
-        
+         
+        this.shadboss.play();
+        game.input.keyboard.onPressCallback = function(e) {
+            console.log("key pressed: ", e);
+            if (e == 'i') {
+               game.globalVars.damage = -10,000;
+               game.debug.text('Invincibility!',32,32);
+            }
+        };
         
         
         
@@ -238,15 +261,16 @@ game_state.third.prototype = {
             this.player.animations.stop();
         }
         
-        if(game.time.totalElapsedSeconds() - this.osamalag >= 3 && this.oslayet == 0){
+        if(game.time.totalElapsedSeconds() - this.osamalag >= 5 && this.oslayet == 0){
+           
             this.shados.alpha = 1;
-            game.sound.stopAll();
+            
             this.oslayet = 1;
-            this.shadboss.play();
+            
             this.shados.animations.play('awakening');
             this.osamalag = game.time.totalElapsedSeconds();
         }
-        if(game.time.totalElapsedSeconds() - this.osamalag >= 3 && this.oslayet ==1){
+        if(game.time.totalElapsedSeconds() - this.osamalag >= 5 && this.oslayet ==1){
             this.anim =1;
             this.oslayet = 2;
         }
@@ -254,16 +278,32 @@ game_state.third.prototype = {
             this.shados.animations.play('flail');
         }
         
-        if(game.globalVars.damage == 10000){
+        if(game.globalVars.damage == 10 && this.deadyet == 0){
+            this.skull = game.add.sprite(this.player.world.x, this.player.world.y,'skull');
+            this.player.kill();
+            this.deadyet = game.time.totalElapsedSeconds();
+            
+        }
+        if(game.time.totalElapsedSeconds()-this.deadyet >= 1 && this.deadyet != 0){
             game.state.start('dead');
         }
         
+        if(game.time.totalElapsedSeconds() - this.starttime >= 183){
+            // this.door.alpha = 1;
+            // if(this.player.overlap(this.door)){
+            //     this.player.kill();
+            //     game.state.start('dead');
+            // }
+            game.state.start('dead');
+        }
+        //this.door()
+        this.powerups()
         this.sequencing()
         this.tentaclesense()
         this.follow()
         this.stopstrike()
-        game.debug.text('Animations:  ' + this.anim, 32,32);
-        
+        game.debug.text('Damage: ' + 10 - game.globalVars.damage,32,64);
+
         
     },
     
@@ -466,7 +506,7 @@ game_state.third.prototype = {
     follow: function(){
         this.bshadt.body.velocity.x=0;
         this.homingtentacle.body.velocity.x = 0;
-        game.debug.text('appeared? '+this.apyet,32,64);
+        this.boost.body.velocity.x=0;
         if(this.apyet == 0 && game.time.totalElapsedSeconds()-this.starttime >= 10){
             this.bshadt.animations.play('appear');
             this.apyet = 1;
@@ -476,10 +516,12 @@ game_state.third.prototype = {
             if(this.player.world.x > this.bshadt.world.x){
                 this.bshadt.body.velocity.x = this.tentavelocity;
                 this.homingtentacle.body.velocity.x = this.tentavelocity;
+                this.boost.body.velocity.x = this.tentavelocity;
             }
             if(this.player.world.x < this.bshadt.world.x){
                 this.bshadt.body.velocity.x = 0-this.tentavelocity;
                 this.homingtentacle.body.velocity.x = 0-this.tentavelocity;
+                this.boost.body.velocity.x = 0-this.tentavelocity;
             }
         }
     },
@@ -487,27 +529,28 @@ game_state.third.prototype = {
         if(game.time.totalElapsedSeconds() - this.laststrike >= this.tentacd && this.apyet == 1 && this.stoptrigger == 0){
             this.foltime = 0;
             this.laststrike = game.time.totalElapsedSeconds();
-            this.stoptrigger = 1;
+            this.stoptrigger = 2;
             this.shadstriketime = game.time.totalElapsedSeconds();
         }
         if(this.stoptrigger == 1 && game.time.totalElapsedSeconds() - this.shadstriketime >=0){
             this.homingtentacle.animations.play('home');
             this.stoptrigger = 2;
             this.hittable = 1;
-            this.charge.play();
+            
             
         }
-        if(this.stoptrigger == 2 && game.time.totalElapsedSeconds() - this.shadstriketime >=0.5){
+        if(this.stoptrigger == 2 && game.time.totalElapsedSeconds() - this.shadstriketime >=0.6){
             this.homingtentacle.animations.play('home');
             this.stoptrigger = 3;
             this.hittable = 1;
+            this.charge.play();
             
         }
-        if(game.time.totalElapsedSeconds() - this.shadstriketime >= 1 && this.stoptrigger ==3){
+        if(game.time.totalElapsedSeconds() - this.shadstriketime >= 1.1 && this.stoptrigger ==3){
             this.homingtentacle.animations.play('withdraw');
             this.stoptrigger = 4;
         }
-        if(game.time.totalElapsedSeconds() - this.shadstriketime >= 1.5 &&this.stoptrigger ==4){
+        if(game.time.totalElapsedSeconds() - this.shadstriketime >= 1.6 &&this.stoptrigger ==4){
             this.foltime = 1;
             this.stoptrigger = 0;
             this.laststrike = game.time.totalElapsedSeconds();
@@ -523,8 +566,49 @@ game_state.third.prototype = {
             game.add.tween(this.player).to( {alpha : 1}, 1000, Phaser.Easing.Linear.None, true);
         }
         
-    }
+    },
     
+    powerups: function(){
+        if(game.time.totalElapsedSeconds()-this.starttime >= 102 && this.flashable == 0){
+            this.anim = 0;
+            this.shados.animations.stop();
+            this.shados.animations.play('flash');
+            this.flashable = 1;
+            this.tentavelocity = 400;
+            this.boost.alpha = 1;
+            this.boost.animations.play('boost');
+        }
+        if(game.time.totalElapsedSeconds()-this.starttime >= 103  && this.flashable == 1){
+            this.anim = 1;
+            this.boost.alpha = 0;
+        }
+        
+        if(game.time.totalElapsedSeconds()-this.starttime >= 130 && this.flashable == 1){
+            this.anim = 0;
+            this.shados.animations.stop();
+            this.shados.animations.play('flash');
+            this.flashable = 2;
+            this.tentavelocity = 600;
+            this.boost.alpha = 1;
+            this.boost.animations.play('boost');
+        }
+        if(game.time.totalElapsedSeconds()-this.starttime >= 131  && this.flashable == 2){
+            this.anim = 1;
+            this.boost.alpha = 0;
+        }
+        
+    },
+    
+    // door: function(){
+    //     if(game.time.totalElapsedSeconds() - this.starttime >= 5){
+    //         // this.door.alpha = 1;
+    //         // if(this.player.overlap(this.door)){
+    //         //     this.player.kill();
+    //         //     game.state.start('dead');
+    //         // }
+    //         game.state.start('dead');
+    //     }
+    // }
 
 };
 
