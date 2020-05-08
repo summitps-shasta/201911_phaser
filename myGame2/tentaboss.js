@@ -204,7 +204,7 @@ game_state.third.prototype = {
         game.input.keyboard.onPressCallback = function(e) {
             console.log("key pressed: ", e);
             if (e == 'i') {
-               game.globalVars.damage = -10,000;
+               game.globalVars.damage = -10000;
                game.debug.text('Invincibility!',32,32);
             }
         };
