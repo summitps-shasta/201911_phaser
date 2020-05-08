@@ -302,7 +302,7 @@ game_state.third.prototype = {
         this.tentaclesense()
         this.follow()
         this.stopstrike()
-        game.debug.text('Damage: ' + 10 - game.globalVars.damage,32,64);
+        game.debug.text('Damage: ' + game.globalVars.damage,32,64);
 
         
     },
