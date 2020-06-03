@@ -10,6 +10,11 @@ game_state.story.prototype = {
         game.stage.backgroundColor = '#9182ff';
         this.sprite = game.add.sprite(0, 0, 'start');
         this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+        
+        this.text = game.add.text(400, 400, "ENTER");
+        this.text.anchor(0.5);
+        this.text.fill = '#fff';
+        this.text.fontSize = 20;
     },
     
     update: function() {

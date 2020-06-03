@@ -32,7 +32,19 @@ game_state.main.prototype = {
         ground.body.immovable = true;
 
         var ledge = this.platforms.create(168, 400, 'ground');
+        
+        var ledge1 = this.platforms.create(100, 200, 'ground');
+        
+        var ledge2 = this.platforms.create(50, 300, 'ground');
+        
+        ledge1.body.immovable = true;
+        
+        ledge2.body.immovable = true;
         ledge.body.immovable = true;
+
+
+
+
 
         this.player = game.add.sprite(32, game.world.height - 150, 'dude');
 
