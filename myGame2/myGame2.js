@@ -8,11 +8,12 @@ game_state.main.prototype = {
 
     preload: function() {
         game.load.image('sky', 'assets/sky.png');
-        game.load.image('ground', 'assets/platform.png');
+        game.load.image('ground', 'assets/New Piskel (14).png');
         game.load.image('star', 'assets/star.png');
-        game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        game.load.spritesheet('dude', 'assets/New Piskel (12).png', 84, 76);
         this.score = 0;
         this.scoreText;
+        alert('Get a score of 12, if you fall off then reload the game')
         
 
     },
@@ -32,13 +33,38 @@ game_state.main.prototype = {
         ledge2.body.immovable = true;
         var ledge3 = this.platforms.create(40,450, 'ground');
         ledge3.body.immovable = true;
+        var ledge4 = this.platforms.create(50,100, 'ground');
+        ledge4.body.immovable = true;
+        var ledge5 = this.platforms.create(80, 150, 'ground');
+        ledge5.body.immovable = true;
+        var ledge6 = this.platforms.create(500,100, 'ground');
+        ledge6.body.immovable = true;
+        var ledge7 = this.platforms.create(300,110, 'ground');
+        ledge7.body.immovable = true;
+        var ledge8 = this.platforms.create(200, 80, 'ground');
+        ledge8.body.immovable = true;
+        var ledge9 = this.platforms.create(450,200, 'ground');
+        ledge9.body.immovable = true;
+        var ledge10 = this.platforms.create(600,300, 'ground');
+        ledge10.body.immovable = true;
+        var ledge11 = this.platforms.create(145,300, 'ground');
+        ledge11.body.immovable = true;
+        var ledge12 = this.platforms.create(400,450, 'ground');
+        ledge12.body.immovable = true;
+        var ledge13 = this.platforms.create(60,550, 'ground');
+        ledge13.body.immovable = true
+        var ledge14 = this.platforms.create(150,350, 'ground');
+        ledge14.body.immovable = true;
+         var ledge15 = this.platforms.create(690, 500, 'ground');
+        ledge15.body.immovable = true;
         this.player = game.add.sprite(32, game.world.height - 150, 'dude');
         game.physics.arcade.enable(this.player);
-        this.player.body.bounce.y = 0.8;
+        this.player.body.bounce.y = 0.3;
         this.player.body.gravity.y = 70;
+        this.player.scale.setTo(0.5, 0.5);
         this.player.body.collideWORLDBOUNDS = true;
-        this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-        this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+        this.player.animations.add('left', [2, 1,], 10, true);
+        this.player.animations.add('right',[3, 4,], 10, true);
         game.physics.arcade.collide(this.player, this.platforms);
         this.cursors = game.input.keyboard.createCursorKeys();
         this.stars = game.add.group();
@@ -72,7 +98,7 @@ game_state.main.prototype = {
         }
         else {
             this.player.animations.stop();
-            this.player.frame = 4;
+            this.player.frame = 0;
         }
         if (this.cursors.up.isDown && this.player.body.touching.down){
             this.player.body.velocity.y = -150;
@@ -95,3 +121,4 @@ game_state.main.prototype = {
 }
 game.state.add('main', game_state.main);
 game.state.start('main');
+      
