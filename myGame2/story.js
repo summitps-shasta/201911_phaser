@@ -5,7 +5,7 @@ game_state.story = function() {};
 game_state.story.prototype = {
 
     preload: function() {
-        game.load.image('intro', 'assets/New Piskel (10).png');
+        game.load.image('intro', 'assets/New Piskel (13).png');
 
     },
 

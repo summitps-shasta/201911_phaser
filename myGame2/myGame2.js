@@ -7,17 +7,17 @@ game_state.main = function() {};
 game_state.main.prototype = {
 
        preload: function() {
-        game.load.image('yellow', 'assets/yellow.png');
+        game.load.image('download', 'assets/download.png');
         game.load.image('ground', 'assets/platform.png');
         game.load.image('acorn', 'assets/acorn.png');
-        game.load.spritesheet('potter', 'assets/potter.png', 130, 130);
+        game.load.spritesheet('some', 'assets/some.png', 130, 130);
     },
 
     create: function() {
         game.add.sprite(5, 5, 'acorn');
     
         //A simple background for our game
-        game.add.sprite(0, 0, 'yellow');
+        game.add.sprite(0, 0, 'download');
         
         //The platforms group contains the ground and the 2 ledges we can jump on
         this.platforms = game.add.group();
@@ -50,20 +50,15 @@ game_state.main.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         //The this.player and its settings
-        this.player = game.add.sprite(32, game.world.height - 190, 'potter');
+        this.player = game.add.sprite(32, game.world.height - 200, 'some');
         
         //We need to enable physics on this.player
         game.physics.arcade.enable(this.player);
         
         //Player physics properties. Give the little guy a bounce.
         this.player.body.bounce.y = 0;
-        this.player.body.gravity.y = 125;
+        this.player.body.gravity.y = 150;
         this.player.body.collideWorldBounds = true;
-
-        
-        //Our two animations, walking left and right.
-        this.player.animations.add('left', [2], true);
-        this.player.animations.add('right', [1], true);
         
         //Our controls
         this.cursors = game.input.keyboard.createCursorKeys();
